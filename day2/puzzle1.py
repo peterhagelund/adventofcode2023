@@ -10,8 +10,8 @@ def main():
                 cubes = [cube.strip() for cube in reveal.split(",")]
                 game = {}
                 for cube in cubes:
-                    count, name = cube.split(" ")
-                    game[name] = int(count)
+                    count, color = cube.split(" ")
+                    game[color] = int(count)
                 games[game_id].append(game)
     bag = {
         "red": 12,
@@ -25,13 +25,11 @@ def main():
             for color in ["red", "green", "blue"]:
                 if color in reveal and reveal[color] > bag[color]:
                     possible = False
-                    # print(f"reveal {reveal} in game {game_id} not possible")
                     break
             if not possible:
                 break
         if possible:
             sum += game_id
-
     print(f"sum = {sum}")
 
 

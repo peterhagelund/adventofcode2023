@@ -22,9 +22,8 @@ def main():
         }
         for reveal in reveals:
             for color in ["red", "green", "blue"]:
-                if color in reveal:
-                    if reveal[color] > minimums[color]:
-                        minimums[color] = reveal[color]
+                if color in reveal and reveal[color] > minimums[color]:
+                    minimums[color] = reveal[color]
         power = 1
         for color in ["red", "green", "blue"]:
             power *= minimums[color]
