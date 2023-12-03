@@ -162,7 +162,7 @@ def find_adjacents(numbers: list[list[Match]], line_no: int, index: int) -> list
 
     Returns
     -------
-    list[int]
+    list[Match]
         The adjacents.
     """
     adjacents = []
@@ -190,8 +190,7 @@ def main():
     sum = 0
     for line_no in range(len(schematic)):
         line = schematic[line_no]
-        length = len(line)
-        for index in range(1, length):
+        for index in range(1, len(line)):
             if line[index] != "*":
                 continue
             adjacents = find_adjacents(numbers, line_no, index)
