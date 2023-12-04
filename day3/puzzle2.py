@@ -134,7 +134,7 @@ def find_adjacents_near(matches: list[Match], index: int) -> list[Match]:
     matches : list[Match]
         The matches.
     index : int
-        The index of `*` in the line (below).
+        The index of `*` in the line (above or below).
 
     Returns
     -------
