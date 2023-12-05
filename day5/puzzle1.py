@@ -31,13 +31,12 @@ def main():
                 continue
             if line.startswith("seeds: "):
                 seeds = [int(seed) for seed in line[7:].split(" ")]
+            elif line.endswith(" map:"):
+                map_index += 1
+                maps.append([])
             else:
-                if line.endswith(" map:"):
-                    map_index += 1
-                    maps.append([])
-                else:
-                    values = [int(v) for v in line.split(" ")]
-                    maps[map_index].append((values[0], values[1], values[2]))
+                values = [int(v) for v in line.split(" ")]
+                maps[map_index].append((values[0], values[1], values[2]))
     locations: list[tuple[int, int]] = []
     for seed in seeds:
         source = seed
