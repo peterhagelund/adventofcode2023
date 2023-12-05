@@ -1,6 +1,3 @@
-from sys import exit
-
-
 def dest_to_source(dest: int, map: list[tuple[int, int, int]]) -> int:
     for r in map:
         if dest >= r[0] and dest < r[0] + r[2]:
@@ -30,22 +27,17 @@ def main():
                     values = [int(v) for v in line.split(" ")]
                     maps[map_index].append((values[0], values[1], values[2]))
     location = -1
-    while True:
+    found = False
+    while not found:
         location += 1
-        seed = None
         dest = location
         for map_index in range(6, -1, -1):
-            source = dest_to_source(dest, maps[map_index])
-            if not source:
-                break
-            dest = source
-        if not source:
-            continue
+            dest = dest_to_source(dest, maps[map_index])
         for seed_range in seed_ranges:
-            if source >= seed_range[0] and source < seed_range[0] + seed_range[1]:
-                seed = source
-                print(f"done - seed = {seed}, location = {location}")
-                exit(0)
+            if dest >= seed_range[0] and dest < seed_range[0] + seed_range[1]:
+                print(f"seed = {dest}, location = {location}")
+                found = True
+                break
 
 
 if __name__ == "__main__":

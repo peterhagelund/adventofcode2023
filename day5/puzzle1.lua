@@ -39,13 +39,10 @@ local function main()
     local locations = {}
     for _, seed in ipairs(seeds) do
         local source = seed
-        local dest = nil
         for map_index = 1, #maps do
-            dest = source_to_dest(source, maps[map_index])
-            source = dest
+            source = source_to_dest(source, maps[map_index])
         end
-        local location = dest
-        table.insert(locations, { seed, location })
+        table.insert(locations, { seed, source })
     end
     table.sort(locations, function(a, b) return a[2] < b[2] end)
     print(string.format("lowest location is %d for seed %d", locations[1][2], locations[1][1]))

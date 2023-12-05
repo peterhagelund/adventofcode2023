@@ -41,10 +41,8 @@ def main():
     for seed in seeds:
         source = seed
         for map_index in range(len(maps)):
-            dest = source_to_dest(source, maps[map_index])
-            source = dest
-        location = dest
-        locations.append((seed, location))
+            source = source_to_dest(source, maps[map_index])
+        locations.append((seed, source))
     locations = sorted(locations, key=lambda t: t[1])
     print(f"lowest location is {locations[0][1]} for seed {locations[0][0]}")
 
