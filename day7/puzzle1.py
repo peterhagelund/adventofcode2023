@@ -87,8 +87,6 @@ def hand_compare(hand1: str, hand2: str) -> int:
                 return 1
             elif strength1 < strength2:
                 return -1
-            else:
-                continue
     return 0
 
 
