@@ -9,6 +9,8 @@ for i in range(len(cards)):
 
 @dataclass
 class Game:
+    """Encapsulation of a single game."""
+
     original_hand: str
     original_type: int
     upgraded_hand: str
@@ -52,7 +54,7 @@ def hand_type(hand: str) -> int:
         if sorted_counts[0] == 2:
             return 2  # One pair
         else:
-            return 1
+            return 1  # High card
 
 
 def upgrade_hand(game: Game):
