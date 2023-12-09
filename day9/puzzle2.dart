@@ -37,11 +37,7 @@ void main() async {
       .transform(const LineSplitter());
   int sum = 0;
   await for (final line in lines) {
-    var values = <int>[];
-    for (final value in line.split(' ')) {
-      values.add(int.parse(value));
-    }
-    sum += extrapolate(values);
+    sum += extrapolate([for (final value in line.split(' ')) int.parse(value)]);
   }
   print('sum = $sum');
 }
