@@ -1,0 +1,113 @@
+from collections import deque
+from typing import Optional
+
+
+def find_start(maze: list[str]) -> Optional[tuple[int, int]]:
+    """Finds the start of the pipe maze.
+
+    Parameters
+    ----------
+    maze : list[str]
+        The maze.
+
+    Returns
+    -------
+    (int, int)
+        The starting point (y, x) or `None`.
+    """
+    for y in range(len(maze)):
+        x = maze[y].find("S")
+        if x != -1:
+            return (y, x)
+    return None
+
+
+def calculate_outside_count(start: tuple[int, int], maze: list[str]) -> int:
+    """Calculates the outside count.
+
+    Parameters
+    ----------
+    start : tuple[int, int]
+        The start.
+    maze : list[str]
+        The maze.
+
+    Returns
+    -------
+    int
+        The count of steps to the farthest point.
+    """
+    height = len(maze)
+    width = len(maze[0])
+    queue = deque([start])
+    moves: set[tuple[int, int]] = {start}
+    actual_s = {"|", "-", "J", "L", "7", "F"}
+
+    while queue:
+        pos = queue.popleft()
+        y, x = pos[0], pos[1]
+        c = maze[y][x]
+        if y > 0 and c in "S|JL" and maze[y - 1][x] in "|7F" and (y - 1, x) not in moves:
+            moves.add((y - 1, x))
+            queue.append((y - 1, x))
+            if c == "S":
+                actual_s &= {"|", "J", "L"}
+        if y < height - 1 and c in "S|7F" and maze[y + 1][x] in "|JL" and (y + 1) not in moves:
+            moves.add((y + 1, x))
+            queue.append((y + 1, x))
+            if c == "S":
+                actual_s &= {"|", "7", "F"}
+        if x > 0 and c in "S-J7" and maze[y][x - 1] in "-LF" and (y, x - 1) not in moves:
+            moves.add((y, x - 1))
+            queue.append((y, x - 1))
+            if c == "S":
+                actual_s &= {"-", "J", "7"}
+        if x < width - 1 and c in "S-LF" and maze[y][x + 1] in "-J7" and (y, x + 1) not in moves:
+            moves.add((y, x + 1))
+            queue.append((y, x + 1))
+            if c == "S":
+                actual_s &= {"-", "L", "F"}
+    s = actual_s.pop()
+    maze = [line.replace("S", s) for line in maze]
+    maze = ["".join(c if (y, x) in moves else "." for x, c in enumerate(line)) for y, line in enumerate(maze)]
+    outside_tiles: set[tuple[int, int]] = set()
+    for y in range(height):
+        line = maze[y]
+        outside = True
+        up = False
+        for x in range(width):
+            c = line[x]
+            if c == "|":
+                outside = not outside
+            elif c == "-":
+                pass
+            elif c in "LF":
+                up = c == "L"
+            elif c in "7J":
+                if c != ("J" if up else "7"):
+                    outside = not outside
+                up = False
+            elif c == ".":
+                pass
+            if outside:
+                outside_tiles.add((y, x))
+    return height * width - len(outside_tiles | moves)
+
+
+def main():
+    """Application entry-point."""
+    maze: list[str] = []
+    with open("puzzle_input.txt", "rt") as f:
+        for line in f:
+            maze.append(line.strip())
+    start = find_start(maze)
+    if not start:
+        print("No 'S' found")
+        return
+    print(f"start = {start}")
+    count = calculate_outside_count(start, maze)
+    print(f"count = {count}")
+
+
+if __name__ == "__main__":
+    main()
