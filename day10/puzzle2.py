@@ -29,8 +29,7 @@ def calculate_outside_count(start: tuple[int, int], maze: list[str]) -> int:
     Initially it can be any of the charcters, but as we see different neighbors (north, south, east, west)
     we can whittle down the options to just one.
 
-    Toggle inside/outside flag on `|` and end-of-runs of `L` to `J`.
-    Don't toggle on runs of `F` to `7` because we're running horizontally at the bottom of the line.
+    Toggle inside/outside flag on `|` and end-of-runs of `L` to `J` or `F` to `7`
 
     Parameters
     ----------
