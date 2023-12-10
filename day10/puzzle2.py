@@ -22,14 +22,16 @@ def find_start(maze: list[str]) -> Optional[tuple[int, int]]:
     return None
 
 
-def calculate_outside_count(start: tuple[int, int], maze: list[str]) -> int:
-    """Calculates the outside count.
+def calculate_inside_tile_count(start: tuple[int, int], maze: list[str]) -> int:
+    """Calculates the inside tile count.
 
     Determine what pipe-character `S` replaces in order for algorithm to work.
     Initially it can be any of the charcters, but as we see different neighbors (north, south, east, west)
     we can whittle down the options to just one.
 
-    Toggle inside/outside flag on `|` and end-of-runs of `L` to `J` or `F` to `7`
+    Toggle inside/outside flag on `|` and end-of-runs of `L` to `J` or `F` to `7`.
+
+    When done, the number of inside tiles is the total number of tiles in the maze less the outside tiles and moves.
 
     Parameters
     ----------
@@ -111,7 +113,7 @@ def main():
         print("No 'S' found")
         return
     print(f"start = {start}")
-    count = calculate_outside_count(start, maze)
+    count = calculate_inside_tile_count(start, maze)
     print(f"count = {count}")
 
 
