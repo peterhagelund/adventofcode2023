@@ -15,11 +15,9 @@ def get_space_expansion(space: list[str]) -> (list[int], list[int]):
     width = len(space[0])
     rows: list[int] = []
     columns: list[int] = []
-    y = 0
     for y in range(height):
         if space[y].count(".") == width:
             rows.append(y)
-
     for x in range(width):
         count = 0
         for y in range(height):
@@ -91,7 +89,7 @@ def build_galaxy_pairs(count: int) -> list[tuple[int, int]]:
     """
     pairs: list[tuple[int, int]] = []
     for g1 in range(count):
-        for g2 in range(g1, count):
+        for g2 in range(g1 + 1, count):
             pairs.append((g1, g2))
     return pairs
 

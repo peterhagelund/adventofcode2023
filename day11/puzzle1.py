@@ -67,7 +67,7 @@ def build_galaxy_pairs(count: int) -> list[tuple[int, int]]:
     """
     pairs: list[tuple[int, int]] = []
     for g1 in range(count):
-        for g2 in range(g1, count):
+        for g2 in range(g1 + 1, count):
             pairs.append((g1, g2))
     return pairs
 
@@ -100,12 +100,10 @@ def main():
             space.append(line.strip())
     expand_space(space)
     map = build_galaxy_map(space)
-    print(map)
     pairs = build_galaxy_pairs(len(map))
     sum = 0
     for pair in pairs:
-        distance = calculate_distance(map, pair)
-        sum += distance
+        sum += calculate_distance(map, pair)
     print(f"sum = {sum}")
 
 
