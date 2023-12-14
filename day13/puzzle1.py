@@ -12,34 +12,13 @@ def find_reflection(patterns: list[str]) -> int:
         The row of the reflection if found; `0` otherwise.
     """
     for row in range(1, len(patterns)):
-        size = min(row, len(patterns) - row)
-        above = patterns[row - size : row]
-        below = [r for r in reversed(patterns[row : row + size])]
+        above = patterns[:row][::-1]
+        below = patterns[row:]
+        above = above[: len(below)]
+        below = below[: len(above)]
         if above == below:
             return row
     return 0
-
-
-def flip_patterns(patterns: list[str]) -> list[str]:
-    """Flips a pattern.
-
-    Parameters
-    ----------
-    patterns : list[str]
-        The patterns.
-
-    Returns
-    -------
-    list[str]
-        The flipped pattern.
-    """
-    _patterns: list[str] = []
-    for c in range(len(patterns[0])):
-        _row: list[str] = []
-        for r in range(len(patterns)):
-            _row.append(patterns[r][c])
-        _patterns.append("".join(_row))
-    return _patterns
 
 
 def process_patterns(patterns: list[str]) -> int:
@@ -55,9 +34,9 @@ def process_patterns(patterns: list[str]) -> int:
     int
         The score as 100 * horizontal or vertical.
     """
-    result = find_reflection(patterns) * 100
-    patterns = flip_patterns(patterns)
-    result += find_reflection(patterns)
+    result = 0
+    result += find_reflection(patterns) * 100
+    result += find_reflection(list(zip(*patterns)))
     return result
 
 

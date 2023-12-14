@@ -1,5 +1,5 @@
 def find_reflection(patterns: list[str]) -> int:
-    """Finds a reflection.
+    """Finds a reflection with exactly one different element.
 
     Parameters
     ----------
@@ -12,50 +12,17 @@ def find_reflection(patterns: list[str]) -> int:
         The row of the reflection if found; `0` otherwise.
     """
     for row in range(1, len(patterns)):
-        size = min(row, len(patterns) - row)
-        above = patterns[row - size : row]
-        below = [r for r in reversed(patterns[row : row + size])]
-        if above == below:
+        above = patterns[:row][::-1]
+        below = patterns[row:]
+        size = min(len(above), len(below))
+        diff = 0
+        for y in range(size):
+            for x in range(len(above[0])):
+                if above[y][x] != below[y][x]:
+                    diff += 1
+        if diff == 1:
             return row
     return 0
-
-
-def fix_smudge(patterns: list[str]) -> int:
-    for y in range(len(patterns)):
-        for x in range(len(patterns[y])):
-            _patterns: list[str] = []
-            for _y, r in enumerate(patterns):
-                if _y == y:
-                    replacement = "#" if r[x] == "." else "."
-                    _patterns.append(r[:x] + replacement + r[x + 1 :])
-                else:
-                    _patterns.append(r)
-            result = find_reflection(_patterns)
-            if result != 0:
-                return result
-    return 0
-
-
-def flip_patterns(patterns: list[str]) -> list[str]:
-    """Flips a pattern.
-
-    Parameters
-    ----------
-    patterns : list[str]
-        The patterns.
-
-    Returns
-    -------
-    list[str]
-        The flipped pattern.
-    """
-    _patterns: list[str] = []
-    for x in range(len(patterns[0])):
-        r: list[str] = []
-        for y in range(len(patterns)):
-            r.append(patterns[y][x])
-        _patterns.append("".join(r))
-    return _patterns
 
 
 def process_patterns(patterns: list[str]) -> int:
@@ -69,11 +36,11 @@ def process_patterns(patterns: list[str]) -> int:
     Returns
     -------
     int
-        The score as 100 * horizontal + vertical - either or both of which could be `0`.
+        The score as 100 * horizontal or vertical.
     """
-    result = fix_smudge(patterns) * 100
-    patterns = flip_patterns(patterns)
-    result += fix_smudge(patterns)
+    result = 0
+    result += find_reflection(patterns) * 100
+    result += find_reflection(list(zip(*patterns)))
     return result
 
 
