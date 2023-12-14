@@ -118,7 +118,7 @@ def main():
     print(f"index = {index}")
     cycle = len(loads) - index - 1
     print(f"cycle = {cycle}")
-    offset = ((1000000000 - index) % cycle) - 1
+    offset = (999999999 - index) % cycle
     print(f"offset = {offset}")
     print(f"load = {loads[index + offset]}")
 
