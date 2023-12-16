@@ -31,7 +31,7 @@ def calculate_energized_tiles(contraption: list[list[str]], start: tuple[int, in
     ValueError
         If an invalid tile is encountered.
     """
-    legs: list[tuple[int, int, Direction]] = []
+    legs: set[tuple[int, int, Direction]] = set()
     energized: list[list[bool]] = [[False for _ in row] for row in contraption]
     queue = deque([start])
     height = len(contraption)
@@ -40,7 +40,7 @@ def calculate_energized_tiles(contraption: list[list[str]], start: tuple[int, in
         leg = queue.popleft()
         if leg in legs:
             continue
-        legs.append(leg)
+        legs.add(leg)
         (y, x, direction) = leg
         while True:
             energized[y][x] = True
