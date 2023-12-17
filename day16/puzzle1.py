@@ -41,6 +41,7 @@ def calculate_energized_tiles(contraption: list[list[str]], start: tuple[int, in
         if leg in legs:
             continue
         legs.add(leg)
+        print(leg)
         (y, x, direction) = leg
         while True:
             energized[y][x] = True
