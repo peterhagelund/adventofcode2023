@@ -1,32 +1,50 @@
-from collections import deque
-from enum import Enum
+from heapq import heappop, heappush
 
 
-class Direction(Enum):
-    """Possible directions."""
+def determine_heat_loss(grid: list[list[int]]) -> int:
+    """Determines the heat loss.
 
-    RIGHT = 1
-    DOWN = 2
-    LEFT = 3
-    UP = 4
+    Parameters
+    ----------
+    grid : list[list[int]]
+        The grid.
 
-
-def minimize_heat_loss(city: list[list[str]]) -> int:
-    height = len(city)
-    width = len(city[0])
-    queue = deque([(0, 0, direction) for direction in [Direction.RIGHT, Direction.DOWN]])
+    Returns
+    -------
+    int
+        The heat loss.
+    """
+    height = len(grid)
+    width = len(grid[0])
+    seen = set()
+    queue = [(0, 0, 0, 0, 0, 0)]
     while queue:
-        (y, x, direction) = queue.popleft()
+        heat_loss, y, x, dy, dx, steps = heappop(queue)
+        if y == height - 1 and x == width - 1:
+            return heat_loss
+        if (y, x, dy, dx, steps) in seen:
+            continue
+        seen.add((y, x, dy, dx, steps))
+        if steps < 3 and (dy, dx) != (0, 0):
+            ny = y + dy
+            nx = x + dx
+            if 0 <= ny < height and 0 <= nx < width:
+                heappush(queue, (heat_loss + grid[ny][nx], ny, nx, dy, dx, steps + 1))
+        for ndy, ndx in [(0, 1), (1, 0), (0, -1), (-1, 0)]:
+            if (ndy, ndx) != (dy, dx) and (ndy, ndx) != (-dy, -dx):
+                ny = y + ndy
+                nx = x + ndx
+                if 0 <= ny < height and 0 <= nx < width:
+                    heappush(queue, (heat_loss + grid[ny][nx], ny, nx, ndy, ndx, 1))
     return 0
 
 
 def main():
-    """Application entry-point."""
-    city: list[list[str]] = []
-    with open("sample_input.txt", "rt") as f:
+    grid: list[list[int]] = []
+    with open("puzzle_input.txt", "rt") as f:
         for line in f:
-            city.append(list(line.strip()))
-    heat_loss = 0
+            grid.append(list(map(int, line.strip())))
+    heat_loss = determine_heat_loss(grid)
     print(f"heat loss = {heat_loss}")
 
 

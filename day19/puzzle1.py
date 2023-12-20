@@ -1,6 +1,3 @@
-import operator
-
-
 def main():
     workflows: dict[str, list[tuple[str, str, int, str]]] = {}
     parts: list[dict[str, int]] = []
