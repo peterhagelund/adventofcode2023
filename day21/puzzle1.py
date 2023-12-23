@@ -26,7 +26,7 @@ def main():
     garden: list[str] = []
     with open("puzzle_input.txt", "rt") as f:
         for line in f:
-            garden.append(list(line.strip()))
+            garden.append(line.strip())
     y, x = find_start(garden)
     height = len(garden)
     width = len(garden[0])
@@ -34,7 +34,7 @@ def main():
     seen: set[tuple[int, int]] = {(y, x)}
     plots: set[tuple[int, int]] = set()
     while queue:
-        (y, x, steps) = queue.popleft()
+        y, x, steps = queue.popleft()
         if steps % 2 == 0:
             plots.add((y, x))
         if steps == 0:
