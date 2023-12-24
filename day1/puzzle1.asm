@@ -7,24 +7,22 @@
     jsr     crlf
     lda     #>readymsg
     ldx     #<readymsg
-    ldy     #6
+    ldy     #readylen
     jsr     prtstr
-    jsr     crlf
     stz     total
     stz     total + 1
 read_line:
     ldx     #$00
 read_char:
     jsr     getch
-    bcc     not_done
-    jmp     done
-not_done:
     cmp     #$0d
     beq     parse_line
     sta     buffer,x
     inx
     jmp     read_char
 parse_line:
+    cpx     #$00
+    beq     done
     stx     buflen
     stz     first
     stz     last
@@ -56,7 +54,6 @@ char_done:
 no_overflow:
     jmp     read_line
 done:
-    jsr     crlf
     jsr     prttotal
     rts
 .endproc
@@ -85,12 +82,19 @@ done:
     stx     totalmsg + 9
     lda     #>totalmsg
     ldx     #<totalmsg
-    ldy     #11
+    ldy     #totallen
     jsr     prtstr
+    rts
 .endproc
 
 .segment "DATA"
 
+readymsg:
+    .byte "READY.",13
+readylen = * - readymsg
+totalmsg:
+    .byte "TOTAL: XXXX",13
+totallen = * - totalmsg
 buffer:
 .repeat 128
     .byte $00
@@ -105,7 +109,3 @@ temp:
     .byte $00
 total:
     .word $0000
-readymsg:
-    .asciiz "READY."
-totalmsg:
-    .asciiz "TOTAL: XXXX"
