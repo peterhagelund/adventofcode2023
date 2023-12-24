@@ -63,16 +63,14 @@ done:
 
 .proc makenum
     clc
-    lda     first
-    asl
-    sta     temp
-    asl
-    asl
+    lda     first   ; Get the first digit
+    asl             ; Multiply by two
+    sta     temp    ; Stash it away
+    asl             ; Multiply by two... (so, 4)
+    asl             ; ... and by two again (so, 8)
     clc
-    adc     temp
-    sta     temp
-    lda     last
-    adc     temp
+    adc     temp    ; Add what we stashed away (n * 10 = n * 2 + n * 2 * 2)
+    adc     last    ; Add the second digit (num = 10 * first + last)
     rts
 .endproc
 
@@ -100,9 +98,9 @@ buffer:
 buflen:
     .byte $00
 first:
-    .byte ' '
+    .byte $00
 last:
-    .byte ' '
+    .byte $00
 temp:
     .byte $00
 total:
