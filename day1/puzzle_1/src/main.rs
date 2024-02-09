@@ -6,15 +6,11 @@ fn main() {
         let mut first: Option<u32> = None;
         let mut last: Option<u32> = None;
         for c in line.chars() {
-            match c.to_digit(10) {
-                Some(n) => {
-                    if first.is_none() {
-                        first = Some(n);
-                    }
-                    last = Some(n);
-
-                },
-                None => continue,
+            if let Some(n) = c.to_digit(10) {
+                if first.is_none() {
+                    first = Some(n);
+                }
+                last = Some(n);
             }
         }
         sum += first.unwrap() * 10 + last.unwrap();
