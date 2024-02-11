@@ -10,6 +10,7 @@ struct Schematic<'a> {
     matches: Vec<Vec<Match<'a>>>,
 }
 
+/// `Schematic` methods.
 impl Schematic<'_> {
     /// Creates a `Schematic` from a `&str`.
     ///
@@ -43,44 +44,46 @@ impl Schematic<'_> {
     /// ```
     fn adjacents_for(&self, y: usize, x: usize) -> Vec<&Match> {
         let mut adjacents: Vec<&Match> = Vec::new();
-        if let Some(m) = self.adjacent_at_end(y, x) {
+        if let Some(m) = self.adjacent_before(y, x) {
             adjacents.push(m);
         }
-        if let Some(m) = self.adjacent_at_start(y, x) {
+        if let Some(m) = self.adjacent_after(y, x) {
             adjacents.push(m);
         }
-        if y > 0 {
-            adjacents.extend(self.adjacents_above(y, x));
+        if let Some(matches) = self.adjacents_above(y, x) {
+            adjacents.extend(matches);
         }
-        if y < self.bytes.len() - 1 {
-            adjacents.extend(self.adjacents_below(y, x));
+        if let Some(matches) = self.adjacents_below(y, x) {
+            adjacents.extend(matches);
         }
         adjacents
     }
 
-    /// Looks for an adjacent match at the end of the specified `y` and `x` coordinates.
+    /// Looks for an adjacent number before the `*` at the specified `y`/`x` coordinates.
     ///
     /// Example
     /// -------
     /// ```
-    /// 123*
+    /// 123*...
     /// ```
-    fn adjacent_at_end(&self, y: usize, x: usize) -> Option<&Match> {
-        self.matches[y].iter().find(|&m| m.end() == x)
+    fn adjacent_before(&self, y: usize, x: usize) -> Option<&Match> {
+        self.matches[y].iter().find(|&m| x == m.end())
     }
 
-    /// Looks for an adjacent match at the start of the specified `y` and `x` coordinates.
+    /// Looks for an adjacent number after the `*` at the specified `y`/`x` coordinates.
     ///
     /// Example
     /// -------
     /// ```
-    /// *456
+    /// ...*456
     /// ```
-    fn adjacent_at_start(&self, y: usize, x: usize) -> Option<&Match> {
-        self.matches[y].iter().find(|&m| m.start() == x + 1)
+    fn adjacent_after(&self, y: usize, x: usize) -> Option<&Match> {
+        self.matches[y].iter().find(|&m| x + 1 == m.start())
     }
 
-    /// Finds `0`, `1`, or `2` adjacent matches above.
+    /// Finds `0`, `1`, or `2` adjacent number(s) above the `*` at the specified `y`/`x` coordinates.
+    ///
+    /// If the the `*` is within the first line of the schematic, `None` is returned.
     ///
     /// Example
     /// -------
@@ -88,14 +91,17 @@ impl Schematic<'_> {
     /// .123...
     ///     *
     /// ```
-    fn adjacents_above(&self, y: usize, x: usize) -> Vec<&Match> {
-        self.matches[y - 1]
-            .iter()
-            .filter(|&m| m.end() == x || m.start() == x + 1 || (m.start() <= x && m.end() > x))
-            .collect()
+    fn adjacents_above(&self, y: usize, x: usize) -> Option<Vec<&Match>> {
+        if y == 0 {
+            None
+        } else {
+            Some(self.adjacents_near(y - 1, x))
+        }
     }
 
-    /// Finds `0`, `1`, or `2` adjacent matches below.
+    /// Finds `0`, `1`, or `2` adjacent number(s) below the `*` at the specified `y`/`x` coordinates.
+    ///
+    /// If the the `*` is within the last line of the schematic, `None` is returned.
     ///
     /// Example
     /// -------
@@ -103,10 +109,19 @@ impl Schematic<'_> {
     ///     *
     /// ..12.3..
     /// ```
-    fn adjacents_below(&self, y: usize, x: usize) -> Vec<&Match> {
-        self.matches[y + 1]
+    fn adjacents_below(&self, y: usize, x: usize) -> Option<Vec<&Match>> {
+        if y + 1 == self.bytes.len() {
+            None
+        } else {
+            Some(self.adjacents_near(y + 1, x))
+        }
+    }
+
+    /// Finds `0`, `1`, or `2` adjacent number(s) "near" the `*` at the specified `y`/`x` coordinates.
+    fn adjacents_near(&self, y: usize, x: usize) -> Vec<&Match> {
+        self.matches[y]
             .iter()
-            .filter(|&m| m.end() == x || m.start() == x + 1 || (m.start() <= x && m.end() > x))
+            .filter(|&m| x + 1 >= m.start() && x <= m.end())
             .collect()
     }
 }
