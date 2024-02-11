@@ -44,17 +44,17 @@ impl Schematic<'_> {
     /// ```
     fn adjacents_for(&self, y: usize, x: usize) -> Vec<&Match> {
         let mut adjacents: Vec<&Match> = Vec::new();
-        if let Some(m) = self.adjacent_before(y, x) {
-            adjacents.push(m);
+        if let Some(before) = self.adjacent_before(y, x) {
+            adjacents.push(before);
         }
-        if let Some(m) = self.adjacent_after(y, x) {
-            adjacents.push(m);
+        if let Some(after) = self.adjacent_after(y, x) {
+            adjacents.push(after);
         }
-        if let Some(matches) = self.adjacents_above(y, x) {
-            adjacents.extend(matches);
+        if let Some(above) = self.adjacents_above(y, x) {
+            adjacents.extend(above);
         }
-        if let Some(matches) = self.adjacents_below(y, x) {
-            adjacents.extend(matches);
+        if let Some(below) = self.adjacents_below(y, x) {
+            adjacents.extend(below);
         }
         adjacents
     }
@@ -131,8 +131,8 @@ fn main() {
     assert!(s.is_ascii());
     let schematic = Schematic::from_str(&s);
     let mut sum: u32 = 0;
-    for (y, line_bytes) in schematic.bytes.iter().enumerate() {
-        for (x, b) in line_bytes.iter().enumerate() {
+    for (y, bytes) in schematic.bytes.iter().enumerate() {
+        for (x, b) in bytes.iter().enumerate() {
             if *b != b'*' {
                 continue;
             }
