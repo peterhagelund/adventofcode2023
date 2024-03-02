@@ -67,8 +67,6 @@ def main():
     with open("puzzle_input.txt", "rt") as f:
         for line in f:
             maze.append(line.strip())
-    for line in maze:
-        print(line)
     start = find_start(maze)
     if not start:
         print("No 'S' found")

@@ -112,7 +112,6 @@ def main():
     if not start:
         print("No 'S' found")
         return
-    print(f"start = {start}")
     count = calculate_inside_tile_count(start, maze)
     print(f"count = {count}")
 
