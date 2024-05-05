@@ -1,6 +1,6 @@
 def main():
     num_digits = [str(n) for n in range(1, 10)]
-    word_digits = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]
+    word_digits = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"] 
     digits = num_digits + word_digits
     sum = 0
     with open("puzzle_input.txt", "rt") as f:
